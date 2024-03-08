@@ -1,15 +1,17 @@
 import requests
 import os
 from dotenv import load_dotenv
-from pydantic import BaseModel, Field, Literal
+from pydantic import BaseModel, Field
+from typing import Literal
 
 load_dotenv()
 
-class ListAllServices(BaseModel):
+# It's important for classes to be in snake case to match their definition that goes in the LLM context
+class list_all_services(BaseModel):
     """List all cloud services the user is hosting on Render.com"""
     limit: int = Field(default=20, description="The max number of services to return.")
 
-class CreateService(BaseModel):
+class create_service(BaseModel):
     """Create a new cloud service for the user on Render.com"""
     name: str = Field(default="my-new-service", description="The name of the service to create.")
     service_type: Literal['cron_job', 'web_service', 'background_worker', 'private_service', 'static_site'] = Field(default="web", description="The type of service to create.")
@@ -48,5 +50,7 @@ class Render:
   @staticmethod
   def functions():
     return [
-      ListAllServices.model_json_schema()
+      list_all_services.model_json_schema(),
+      create_service.model_json_schema()
     ]
+
