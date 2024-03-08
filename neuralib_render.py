@@ -26,8 +26,11 @@ class Render:
         'Authorization': f'Bearer {os.getenv("RENDER_API_KEY")}'
       }
   
-  def list_all_services(limit=20):      
-      url = f'https://api.render.com/v1/services?limit=20'
+  def list_all_services(limit=20):
+      print(f"Received limit: {limit}")
+      print(locals())
+      
+      url = f'https://api.render.com/v1/services?limit={limit}'
 
       response = requests.get(url, headers=Render.authorization_headers())
 
