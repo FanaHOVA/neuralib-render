@@ -27,7 +27,7 @@ class Render:
       }
   
   def list_all_services(limit=20):      
-      url = f'https://api.render.com/v1/services?limit={limit}'
+      url = f'https://api.render.com/v1/services?limit=20'
 
       response = requests.get(url, headers=Render.authorization_headers())
 
