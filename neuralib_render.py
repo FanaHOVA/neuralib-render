@@ -27,11 +27,13 @@ class Render:
       }
   
   def list_all_services(limit=20):
+      print(os.getenv("RENDER_API_KEY"))
+      
       url = f'https://api.render.com/v1/services?limit={limit}'
 
       response = requests.get(url, headers=Render.authorization_headers())
 
-      print(response.json())
+      print(response)
       
   def create_service(name='my-new-service', service_type='cron_job', service_details={ "env": "docker", "schedule": "0 0 * * *" }):
       url = 'https://api.render.com/v1/services'
