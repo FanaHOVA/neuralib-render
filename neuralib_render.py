@@ -26,7 +26,7 @@ class Render:
         'Authorization': f'Bearer {os.getenv("RENDER_API_KEY")}'
       }
   
-  def list_all_services(limit=20):
+  def list_all_services(limit):
       print(f"Received limit: {limit}")
       print(locals())
       
