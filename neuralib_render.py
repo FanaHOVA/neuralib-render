@@ -27,16 +27,13 @@ class Render:
       }
   
   def list_all_services(limit):
-      print(f"Received limit: {limit}")
-      print(locals())
-      
       url = f'https://api.render.com/v1/services?limit={limit}'
 
       response = requests.get(url, headers=Render.authorization_headers())
 
-      print(response)
       if response.status_code != 200:
         print(f"Error: {response.status_code}, {response.text}")
+        
       print(response.json())
       
   def create_service(name='my-new-service', service_type='cron_job', service_details={ "env": "docker", "schedule": "0 0 * * *" }):
@@ -54,9 +51,32 @@ class Render:
       print(response.json())
       
   @staticmethod
+  def custom_schema(model):
+    schema = model.schema()
+    # Ensure 'type' for parameters is set to 'object'
+    parameters_schema = {
+      "type": "object",
+      "properties": schema.get('properties', {}),
+      "required": schema.get('required', [])
+    }
+    # Remove 'title' and 'description' from each property in 'properties'
+    for param in parameters_schema['properties'].values():
+      param.pop('title', None)
+      param.pop('description', None)
+
+    return {
+      "type": "function",  # Ensure this is set correctly for the API
+      "function": {
+        "name": model.__name__,
+        "description": schema.get('description', ''),
+        "parameters": parameters_schema  # Updated structure
+      }
+    }
+    
+  @staticmethod
   def functions():
     return [
-      list_all_services.model_json_schema(),
-      create_service.model_json_schema()
+      Render.format_for_function_calling(list_all_services),
+      Render.format_for_function_calling(create_service)
     ]
 
